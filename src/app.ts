@@ -15,6 +15,7 @@ import productsRoutes from "./routes/productsRoutes";
 import cartRoutes from "./routes/cartRoutes";
 import addressRoutes from "./routes/addressRoutes";
 import orderRoutes from "./routes/orderRoutes";
+import uploadRoutes from "./routes/upload.route";
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use("/products", productsRoutes);
 app.use("/cart", cartRoutes);
 app.use("/addresses", addressRoutes);
 app.use("/orders", orderRoutes);
+app.use("/upload", uploadRoutes);
 
 // Usado para captura de errors e retornar em JSON ao invés de HTML assim como o Express retorna.
 app.use(errorMiddleware); // ← sempre o ÚLTIMO
