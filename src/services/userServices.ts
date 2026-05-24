@@ -1,7 +1,3 @@
-import prisma from "../lib/prisma";
-import { generateHash } from "../utils/generateHash";
-import { compareHash } from "../utils/compareHash";
-import { createError } from "../utils/createError";
 import type { Prisma } from "../generated/prisma/client";
 import type {
   CreateUserDTO,
@@ -12,6 +8,10 @@ import type {
   UserListResponse,
   UserResponse,
 } from "../interfaces/user.interface";
+import prisma from "../lib/prisma";
+import { compareHash } from "../utils/compareHash";
+import { createError } from "../utils/createError";
+import { generateHash } from "../utils/generateHash";
 
 const userSelect = {
   id: true,
@@ -22,7 +22,12 @@ const userSelect = {
 } as const;
 
 class UserService {
-  async create({ name, email, password, role }: CreateUserDTO): Promise<UserResponse> {
+  async create({
+    name,
+    email,
+    password,
+    role,
+  }: CreateUserDTO): Promise<UserResponse> {
     try {
       const normalizedEmail = email.toLowerCase().trim();
       const hashPassword = await generateHash(password);
@@ -46,7 +51,13 @@ class UserService {
     }
   }
 
-  async getAll({ page = 1, limit = 20 }: { page?: number; limit?: number } = {}): Promise<UserListResponse> {
+  async getAll({
+    page = 1,
+    limit = 20,
+  }: {
+    page?: number;
+    limit?: number;
+  } = {}): Promise<UserListResponse> {
     const safePage = Math.max(1, Math.trunc(page));
     const take = Math.min(Math.max(1, Math.trunc(limit)), 100);
     const skip = (safePage - 1) * take;
@@ -61,14 +72,22 @@ class UserService {
           email: true,
           role: true,
           isActive: true,
-          verifiedEmail: true
+          verifiedEmail: true,
         },
         orderBy: { name: "asc" },
       }),
       prisma.user.count(),
     ]);
 
-    return { data, meta: { total, page: safePage, limit: take, totalPages: Math.ceil(total / take) } };
+    return {
+      data,
+      meta: {
+        total,
+        page: safePage,
+        limit: take,
+        totalPages: Math.ceil(total / take),
+      },
+    };
   }
 
   async update(id: string, data: UpdateUserDTO): Promise<UserResponse> {
@@ -128,7 +147,10 @@ class UserService {
     return updatedUser;
   }
 
-  async updateRole({ id, role }: UpdateUserRoleDTO & { id: string }): Promise<UserResponse> {
+  async updateRole({
+    id,
+    role,
+  }: UpdateUserRoleDTO & { id: string }): Promise<UserResponse> {
     const user = await prisma.user.findUnique({
       where: { id: id },
       select: { role: true },
@@ -146,7 +168,10 @@ class UserService {
     return updatedUser;
   }
 
-  async toggle({ id, isActive }: ToggleUserDTO & { id: string }): Promise<UserResponse> {
+  async toggle({
+    id,
+    isActive,
+  }: ToggleUserDTO & { id: string }): Promise<UserResponse> {
     const user = await prisma.user.findUnique({
       where: { id: id },
       select: { isActive: true },
@@ -154,7 +179,10 @@ class UserService {
 
     if (!user) throw createError("Usuário não encontrado.", 404);
     if (user.isActive === isActive)
-      throw createError(`Usuário já está ${isActive ? "ativado." : "desativado."}`, 409);
+      throw createError(
+        `Usuário já está ${isActive ? "ativado." : "desativado."}`,
+        409,
+      );
 
     const userToggle = await prisma.user.update({
       where: { id: id },

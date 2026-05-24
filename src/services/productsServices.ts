@@ -1,6 +1,3 @@
-import prisma from "../lib/prisma";
-import { generateSlug } from "../utils/generateSlug";
-import { createError } from "../utils/createError";
 import type { Prisma } from "../generated/prisma/client";
 import type {
   CreateProductDTO,
@@ -9,6 +6,9 @@ import type {
   ProductResponse,
   UpdateProductDTO,
 } from "../interfaces/product.interface";
+import prisma from "../lib/prisma";
+import { createError } from "../utils/createError";
+import { generateSlug } from "../utils/generateSlug";
 
 const productSelect = {
   id: true,
@@ -25,15 +25,26 @@ const productSelect = {
 class ProductsService {
   async create(data: CreateProductDTO): Promise<ProductResponse> {
     try {
-      const { categoryId, name, mark, description, price, stock, imageUrl } = data;
+      const { categoryId, name, mark, description, price, stock, imageUrl } =
+        data;
 
       return await prisma.product.create({
-        data: { categoryId, name, mark, description, price, stock, imageUrl, slug: generateSlug(name) },
+        data: {
+          categoryId,
+          name,
+          mark,
+          description,
+          price,
+          stock,
+          imageUrl,
+          slug: generateSlug(name),
+        },
         select: productSelect,
       });
     } catch (error) {
       const code = (error as Prisma.PrismaClientKnownRequestError).code;
-      if (code === "P2002") throw createError("Já existe um produto com esse nome.", 409);
+      if (code === "P2002")
+        throw createError("Já existe um produto com esse nome.", 409);
       if (code === "P2003") throw createError("Categoria não encontrada.", 404);
       throw error;
     }
@@ -52,13 +63,16 @@ class ProductsService {
     } catch (error) {
       const code = (error as Prisma.PrismaClientKnownRequestError).code;
       if (code === "P2025") throw createError("Produto não encontrado.", 404);
-      if (code === "P2002") throw createError("Já existe um produto com esse nome.", 409);
+      if (code === "P2002")
+        throw createError("Já existe um produto com esse nome.", 409);
       if (code === "P2003") throw createError("Categoria não encontrada.", 404);
       throw error;
     }
   }
 
-  async delete(id: string): Promise<ProductDeleteResponse & { softDeleted: boolean }> {
+  async delete(
+    id: string,
+  ): Promise<ProductDeleteResponse & { softDeleted: boolean }> {
     const product = await prisma.product.findUnique({
       where: { id },
       select: { id: true, name: true, slug: true, isActive: true },
@@ -67,7 +81,9 @@ class ProductsService {
     if (!product) throw createError("Produto não encontrado.", 404);
     if (!product.isActive) throw createError("Produto já foi removido.", 409);
 
-    const linkedOrderItems = await prisma.orderItem.count({ where: { productId: id } });
+    const linkedOrderItems = await prisma.orderItem.count({
+      where: { productId: id },
+    });
 
     if (linkedOrderItems > 0) {
       const updated = await prisma.product.update({
@@ -122,7 +138,15 @@ class ProductsService {
       prisma.product.count({ where }),
     ]);
 
-    return { data, meta: { total, page: safePage, limit: take, totalPages: Math.ceil(total / take) } };
+    return {
+      data,
+      meta: {
+        total,
+        page: safePage,
+        limit: take,
+        totalPages: Math.ceil(total / take),
+      },
+    };
   }
 
   async getById(id: string): Promise<ProductResponse> {

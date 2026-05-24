@@ -1,4 +1,5 @@
 import { createRequire } from "module";
+
 const require = createRequire(import.meta.url);
 const { version } = require("../../package.json");
 
@@ -11,13 +12,19 @@ const swaggerDefinition = {
   },
   servers: [
     { url: "http://localhost:3000", description: "Desenvolvimento" },
-    { url: "https://api-development-daad.up.railway.app", description: "Produção" },
+    {
+      url: "https://api-development-daad.up.railway.app",
+      description: "Produção",
+    },
   ],
   tags: [
     { name: "Auth", description: "Autenticação e sessão" },
     { name: "Users", description: "Gerenciamento de usuários (ADMIN)" },
     { name: "Addresses", description: "Endereços de entrega do usuário" },
-    { name: "Categories", description: "Categorias de produtos (ADMIN para escrita)" },
+    {
+      name: "Categories",
+      description: "Categorias de produtos (ADMIN para escrita)",
+    },
     { name: "Products", description: "Catálogo de produtos" },
     { name: "Cart", description: "Carrinho de compras" },
     { name: "Orders", description: "Pedidos" },
@@ -86,7 +93,8 @@ const swaggerDefinition = {
           message: { type: "string" },
           softDeleted: {
             type: "boolean",
-            description: "true = apenas desativado (tinha pedidos vinculados). false = removido fisicamente.",
+            description:
+              "true = apenas desativado (tinha pedidos vinculados). false = removido fisicamente.",
           },
         },
       },
@@ -102,7 +110,11 @@ const swaggerDefinition = {
         type: "object",
         properties: {
           id: { type: "string", format: "uuid" },
-          url: { type: "string", format: "uri", example: "https://example.com/image.jpg" },
+          url: {
+            type: "string",
+            format: "uri",
+            example: "https://example.com/image.jpg",
+          },
         },
       },
       ProductCategory: {
@@ -156,7 +168,8 @@ const swaggerDefinition = {
           message: { type: "string" },
           softDeleted: {
             type: "boolean",
-            description: "true = desativado (tinha OrderItems). false = deletado fisicamente.",
+            description:
+              "true = desativado (tinha OrderItems). false = deletado fisicamente.",
           },
           product: {
             type: "object",

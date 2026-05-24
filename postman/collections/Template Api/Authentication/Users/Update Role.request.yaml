@@ -1,0 +1,19 @@
+$kind: http-request
+name: Update Role
+order: 4000
+url: '{{baseURL}}/users/update/f61b89ea-3922-4214-985a-604829e53c39/role'
+method: PATCH
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "role": "ADMIN"
+    }

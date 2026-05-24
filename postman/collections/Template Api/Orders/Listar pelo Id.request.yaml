@@ -1,0 +1,10 @@
+$kind: http-request
+name: Listar pelo Id
+order: 3000
+url: '{{baseURL}}/orders/a394508a-0eee-4857-970d-2e021006b227'
+method: GET
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{userToken}}'

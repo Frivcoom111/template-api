@@ -1,0 +1,7 @@
+$kind: collection
+name: Template Api
+description: Template API for an e-commerce platform (users, auth, products, categories, cart, addresses, orders).
+variables:
+  baseURL: http://localhost:3000
+  userToken: ""
+  adminToken: ""

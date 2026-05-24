@@ -5,7 +5,10 @@ export const createOrderSchema = z.object({
 });
 
 export const updateOrderStatusSchema = z.object({
-  orderStatus: z.enum(["PENDING", "PAID", "SHIPPED", "DELIVERED", "CANCELLED"], {
-    error: () => "Status inválido.",
-  }),
+  orderStatus: z.enum(
+    ["PENDING", "PAID", "SHIPPED", "DELIVERED", "CANCELLED"],
+    {
+      error: () => "Status inválido.",
+    },
+  ),
 });

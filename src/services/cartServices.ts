@@ -1,7 +1,7 @@
-import prisma from "../lib/prisma";
 import { Prisma } from "../generated/prisma/client";
-import { createError } from "../utils/createError";
 import type { CartResponse } from "../interfaces/cart.interface";
+import prisma from "../lib/prisma";
+import { createError } from "../utils/createError";
 
 class CartService {
   async #getOrCreateCart(userId: string) {
@@ -42,19 +42,27 @@ class CartService {
     const total = cart.items
       .reduce(
         (sum, item) => sum.add(item.product.price.mul(item.quantity)),
-        new Prisma.Decimal(0)
+        new Prisma.Decimal(0),
       )
       .toFixed(2);
 
     return { ...cart, total };
   }
 
-  async addItem(userId: string, productId: string, quantity: number): Promise<CartResponse> {
-    const product = await prisma.product.findUnique({ where: { id: productId } });
+  async addItem(
+    userId: string,
+    productId: string,
+    quantity: number,
+  ): Promise<CartResponse> {
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
 
-    if (!product || !product.isActive) throw createError("Produto não encontrado.", 404);
+    if (!product || !product.isActive)
+      throw createError("Produto não encontrado.", 404);
     if (quantity <= 0) throw createError("Quantidade inválida.", 400);
-    if (product.stock < quantity) throw createError("Estoque insuficiente.", 409);
+    if (product.stock < quantity)
+      throw createError("Estoque insuficiente.", 409);
 
     const cart = await this.#getOrCreateCart(userId);
 
@@ -62,7 +70,8 @@ class CartService {
       where: { cartId_productId: { cartId: cart.id, productId } },
     });
 
-    if (existingItem?.quantity === quantity) throw createError("Quantidade igual a do carrinho.", 409);
+    if (existingItem?.quantity === quantity)
+      throw createError("Quantidade igual a do carrinho.", 409);
 
     await prisma.cartItem.upsert({
       where: { cartId_productId: { cartId: cart.id, productId } },
@@ -73,7 +82,11 @@ class CartService {
     return this.getCart(userId);
   }
 
-  async updateItem(userId: string, productId: string, quantity: number): Promise<CartResponse> {
+  async updateItem(
+    userId: string,
+    productId: string,
+    quantity: number,
+  ): Promise<CartResponse> {
     const cart = await prisma.cart.findUnique({ where: { userId } });
 
     if (!cart) throw createError("Carrinho não encontrado.", 404);
@@ -84,11 +97,15 @@ class CartService {
 
     if (!item) throw createError("Item não encontrado no carrinho.", 404);
 
-    const product = await prisma.product.findUnique({ where: { id: productId } });
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
 
-    if (!product || !product.isActive) throw createError("Produto não encontrado.", 404);
+    if (!product || !product.isActive)
+      throw createError("Produto não encontrado.", 404);
     if (quantity <= 0) throw createError("Quantidade inválida.", 400);
-    if (product.stock < quantity) throw createError("Estoque insuficiente.", 409);
+    if (product.stock < quantity)
+      throw createError("Estoque insuficiente.", 409);
 
     await prisma.cartItem.update({
       where: { cartId_productId: { cartId: cart.id, productId } },

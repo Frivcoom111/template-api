@@ -1,0 +1,5 @@
+$kind: http-request
+name: Listar Produtos pelo Id
+order: 3000
+url: '{{baseURL}}/products/7'
+method: GET

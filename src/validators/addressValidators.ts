@@ -8,8 +8,12 @@ export const createAddressSchema = z.object({
   number: z.number().int().positive("Número inválido."),
   complement: z.string().max(100).optional(),
   city: z.string().min(1).max(100),
-  state: z.string().regex(STATE_REGEX, "Estado deve ter 2 letras maiúsculas (ex: SP)."),
-  zipCode: z.string().regex(CEP_REGEX, "CEP inválido. Use o formato XXXXX-XXX."),
+  state: z
+    .string()
+    .regex(STATE_REGEX, "Estado deve ter 2 letras maiúsculas (ex: SP)."),
+  zipCode: z
+    .string()
+    .regex(CEP_REGEX, "CEP inválido. Use o formato XXXXX-XXX."),
 });
 
 export const updateAddressSchema = createAddressSchema

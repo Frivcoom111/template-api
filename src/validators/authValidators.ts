@@ -8,7 +8,10 @@ const passwordSchema = z
   .regex(/[0-9]/, "Senha deve ter pelo menos um número.");
 
 export const registerSchema = z.object({
-  name: z.string().min(3, "Nome mínimo 3 caracteres.").max(100, "Nome máximo 100 caracteres."),
+  name: z
+    .string()
+    .min(3, "Nome mínimo 3 caracteres.")
+    .max(100, "Nome máximo 100 caracteres."),
   email: z.string().email("Email inválido."),
   password: passwordSchema,
 });

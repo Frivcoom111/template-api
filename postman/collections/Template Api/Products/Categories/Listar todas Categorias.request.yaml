@@ -1,0 +1,5 @@
+$kind: http-request
+name: Listar todas Categorias
+order: 2000
+url: '{{baseURL}}/categories'
+method: GET

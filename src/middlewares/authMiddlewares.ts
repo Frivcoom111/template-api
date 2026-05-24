@@ -1,13 +1,17 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
-import { getRequiredEnv } from "../utils/getRequiredEnv";
-import { createError } from "../utils/createError";
 import prisma from "../lib/prisma";
 import redis from "../lib/redis";
+import { createError } from "../utils/createError";
+import { getRequiredEnv } from "../utils/getRequiredEnv";
 
 const JWT_SECRET = getRequiredEnv("JWT_SECRET");
 
-export const authToken: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const authToken: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const headerAuthorization = req.headers.authorization as string;
 
@@ -35,9 +39,15 @@ export const authToken: RequestHandler = async (req: Request, res: Response, nex
       select: { isActive: true, role: true },
     });
 
-    if (!user || !user.isActive) return next(createError("Usuário desativado, acesso negado.", 401));
+    if (!user || !user.isActive)
+      return next(createError("Usuário desativado, acesso negado.", 401));
 
-    req.user = { id: decoded.id, role: user.role, isActive: user.isActive, exp: decoded.exp };
+    req.user = {
+      id: decoded.id,
+      role: user.role,
+      isActive: user.isActive,
+      exp: decoded.exp,
+    };
 
     next();
   } catch (error) {
@@ -45,7 +55,11 @@ export const authToken: RequestHandler = async (req: Request, res: Response, nex
   }
 };
 
-export const authAdminOnly: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+export const authAdminOnly: RequestHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const role = req.user?.role;
 
   if (!role || role !== "ADMIN") {

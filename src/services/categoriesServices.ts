@@ -1,11 +1,11 @@
-import prisma from "../lib/prisma";
-import { generateSlug } from "../utils/generateSlug";
-import { createError } from "../utils/createError";
 import type { Prisma } from "../generated/prisma/client";
 import type {
   CategoryResponse,
   UpdateCategoryDTO,
 } from "../interfaces/category.interface";
+import prisma from "../lib/prisma";
+import { createError } from "../utils/createError";
+import { generateSlug } from "../utils/generateSlug";
 
 const categorySelect = {
   id: true,
@@ -66,12 +66,17 @@ class CategoriesService {
     } catch (error) {
       const code = (error as Prisma.PrismaClientKnownRequestError).code;
       if (code === "P2025") throw createError("Categoria não encontrada.", 404);
-      if (code === "P2003") throw createError("Categoria possui produtos vinculados.", 409);
+      if (code === "P2003")
+        throw createError("Categoria possui produtos vinculados.", 409);
       throw error;
     }
   }
 
-  async get({ slug }: { slug?: string } = {}): Promise<CategoryResponse | CategoryResponse[]> {
+  async get({
+    slug,
+  }: {
+    slug?: string;
+  } = {}): Promise<CategoryResponse | CategoryResponse[]> {
     if (slug) {
       const category = await prisma.category.findUnique({
         where: { slug: slug },

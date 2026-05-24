@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../../../src/services/emailService", () => ({
   default: {
@@ -8,8 +8,8 @@ vi.mock("../../../src/services/emailService", () => ({
   },
 }));
 
-import emailService from "../../../src/services/emailService";
 import emailControllers from "../../../src/controllers/emailControllers";
+import emailService from "../../../src/services/emailService";
 
 const serviceMock = vi.mocked(emailService);
 
@@ -63,7 +63,10 @@ describe("EmailController.sendEmail", () => {
 
 describe("EmailController.verifyEmail", () => {
   it("retorna 401 quando não há user no token", async () => {
-    const req = { user: undefined, body: { code: 482931 } } as unknown as Request;
+    const req = {
+      user: undefined,
+      body: { code: 482931 },
+    } as unknown as Request;
     const res = makeRes();
 
     await emailControllers.verifyEmail(req, res, next);
@@ -73,7 +76,10 @@ describe("EmailController.verifyEmail", () => {
   });
 
   it("retorna 400 para código inválido (Zod)", async () => {
-    const req = { user: { id: "id-1" }, body: { code: "abc" } } as unknown as Request;
+    const req = {
+      user: { id: "id-1" },
+      body: { code: "abc" },
+    } as unknown as Request;
     const res = makeRes();
 
     await emailControllers.verifyEmail(req, res, next);
@@ -83,7 +89,10 @@ describe("EmailController.verifyEmail", () => {
   });
 
   it("retorna 400 para código fora do intervalo", async () => {
-    const req = { user: { id: "id-1" }, body: { code: 99 } } as unknown as Request;
+    const req = {
+      user: { id: "id-1" },
+      body: { code: 99 },
+    } as unknown as Request;
     const res = makeRes();
 
     await emailControllers.verifyEmail(req, res, next);
@@ -92,7 +101,10 @@ describe("EmailController.verifyEmail", () => {
   });
 
   it("retorna 200 e chama service com id e code corretos", async () => {
-    const req = { user: { id: "id-1" }, body: { code: "482931" } } as unknown as Request;
+    const req = {
+      user: { id: "id-1" },
+      body: { code: "482931" },
+    } as unknown as Request;
     const res = makeRes();
     serviceMock.verifyEmail.mockResolvedValue(undefined);
 
@@ -103,7 +115,10 @@ describe("EmailController.verifyEmail", () => {
   });
 
   it("repassa erro ao next quando service lança", async () => {
-    const req = { user: { id: "id-1" }, body: { code: "482931" } } as unknown as Request;
+    const req = {
+      user: { id: "id-1" },
+      body: { code: "482931" },
+    } as unknown as Request;
     const res = makeRes();
     const error = new Error("falha na verificação");
     serviceMock.verifyEmail.mockRejectedValue(error);

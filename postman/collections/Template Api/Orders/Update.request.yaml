@@ -1,0 +1,19 @@
+$kind: http-request
+name: Update
+order: 4000
+url: '{{baseURL}}/orders/1/status'
+method: PATCH
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "orderStatus": "PROCESSING"
+    }

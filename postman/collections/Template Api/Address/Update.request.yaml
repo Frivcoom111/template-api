@@ -1,0 +1,19 @@
+$kind: http-request
+name: Update
+order: 4000
+url: '{{baseURL}}/addresses/8fdeaeef-f277-4711-b766-3f5a3bf87806'
+method: PATCH
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "complement": "Apto 30"
+    }

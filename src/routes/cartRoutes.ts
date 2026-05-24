@@ -160,7 +160,11 @@ routes.post("/", authToken, cartControllers.addItem.bind(cartControllers));
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-routes.patch("/:productId", authToken, cartControllers.updateItem.bind(cartControllers));
+routes.patch(
+  "/:productId",
+  authToken,
+  cartControllers.updateItem.bind(cartControllers),
+);
 
 /**
  * @swagger
@@ -203,7 +207,11 @@ routes.patch("/:productId", authToken, cartControllers.updateItem.bind(cartContr
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-routes.delete("/:productId", authToken, cartControllers.removeItem.bind(cartControllers));
+routes.delete(
+  "/:productId",
+  authToken,
+  cartControllers.removeItem.bind(cartControllers),
+);
 
 /**
  * @swagger

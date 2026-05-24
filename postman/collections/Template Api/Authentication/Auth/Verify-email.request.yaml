@@ -1,0 +1,22 @@
+$kind: http-request
+name: Verify-email
+order: 7000
+url: '{{baseURL}}/auth/verified-email?code=766662'
+method: POST
+headers:
+  - key: Content-Type
+    value: application/json
+queryParams:
+  - key: code
+    value: '766662'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{userToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "code": "722832"
+    }

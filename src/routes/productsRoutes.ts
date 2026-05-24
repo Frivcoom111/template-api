@@ -1,7 +1,7 @@
 import express from "express";
-import { authToken, authAdminOnly } from "../middlewares/authMiddlewares";
-import productsControllers from "../controllers/productsControllers";
 import productImagesControllers from "../controllers/productImagesControllers";
+import productsControllers from "../controllers/productsControllers";
+import { authAdminOnly, authToken } from "../middlewares/authMiddlewares";
 
 const routes = express.Router();
 
@@ -73,7 +73,10 @@ routes.get("/", productsControllers.getProducts.bind(productsControllers));
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.get("/:id", productsControllers.getProductById.bind(productsControllers));
+routes.get(
+  "/:id",
+  productsControllers.getProductById.bind(productsControllers),
+);
 
 /**
  * @swagger
@@ -159,7 +162,12 @@ routes.get("/:id", productsControllers.getProductById.bind(productsControllers))
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.post("/", authToken, authAdminOnly, productsControllers.createProduct.bind(productsControllers));
+routes.post(
+  "/",
+  authToken,
+  authAdminOnly,
+  productsControllers.createProduct.bind(productsControllers),
+);
 
 /**
  * @swagger
@@ -227,7 +235,12 @@ routes.post("/", authToken, authAdminOnly, productsControllers.createProduct.bin
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.patch("/update/:id", authToken, authAdminOnly, productsControllers.updateProduct.bind(productsControllers));
+routes.patch(
+  "/update/:id",
+  authToken,
+  authAdminOnly,
+  productsControllers.updateProduct.bind(productsControllers),
+);
 
 /**
  * @swagger
@@ -277,7 +290,12 @@ routes.patch("/update/:id", authToken, authAdminOnly, productsControllers.update
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.delete("/:id", authToken, authAdminOnly, productsControllers.deleteProduct.bind(productsControllers));
+routes.delete(
+  "/:id",
+  authToken,
+  authAdminOnly,
+  productsControllers.deleteProduct.bind(productsControllers),
+);
 
 /**
  * @swagger
@@ -314,7 +332,10 @@ routes.delete("/:id", authToken, authAdminOnly, productsControllers.deleteProduc
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.get("/:productId/images", productImagesControllers.getImages.bind(productImagesControllers));
+routes.get(
+  "/:productId/images",
+  productImagesControllers.getImages.bind(productImagesControllers),
+);
 
 /**
  * @swagger
@@ -375,7 +396,12 @@ routes.get("/:productId/images", productImagesControllers.getImages.bind(product
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.post("/:productId/images", authToken, authAdminOnly, productImagesControllers.addImage.bind(productImagesControllers));
+routes.post(
+  "/:productId/images",
+  authToken,
+  authAdminOnly,
+  productImagesControllers.addImage.bind(productImagesControllers),
+);
 
 /**
  * @swagger
@@ -424,6 +450,11 @@ routes.post("/:productId/images", authToken, authAdminOnly, productImagesControl
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.delete("/:productId/images/:imageId", authToken, authAdminOnly, productImagesControllers.removeImage.bind(productImagesControllers));
+routes.delete(
+  "/:productId/images/:imageId",
+  authToken,
+  authAdminOnly,
+  productImagesControllers.removeImage.bind(productImagesControllers),
+);
 
 export default routes;

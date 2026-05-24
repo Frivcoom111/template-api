@@ -1,0 +1,19 @@
+$kind: http-request
+name: Update
+order: 3000
+url: '{{baseURL}}/categories/update/70fdf939-315b-4288-853f-5f3426e77486'
+method: PATCH
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "name": "Guitarra Acústica"
+    }

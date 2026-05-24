@@ -1,10 +1,10 @@
-import prisma from "../lib/prisma";
-import { Prisma, type OrderStatus } from "../generated/prisma/client";
-import { createError } from "../utils/createError";
+import { type OrderStatus, Prisma } from "../generated/prisma/client";
 import type {
   OrderListResponse,
   OrderResponse,
 } from "../interfaces/order.interface";
+import prisma from "../lib/prisma";
+import { createError } from "../utils/createError";
 
 const orderInclude = {
   items: {
@@ -17,10 +17,13 @@ const orderInclude = {
 
 class OrderService {
   async createOrder(userId: string, addressId: string): Promise<OrderResponse> {
-    const address = await prisma.address.findUnique({ where: { id: addressId } });
+    const address = await prisma.address.findUnique({
+      where: { id: addressId },
+    });
 
     if (!address) throw createError("Endereço não encontrado.", 404);
-    if (address.userId !== userId) throw createError("Endereço não pertence ao usuário.", 403);
+    if (address.userId !== userId)
+      throw createError("Endereço não pertence ao usuário.", 403);
 
     const cart = await prisma.cart.findUnique({
       where: { userId },
@@ -31,20 +34,27 @@ class OrderService {
       },
     });
 
-    if (!cart || cart.items.length === 0) throw createError("Carrinho vazio.", 400);
+    if (!cart || cart.items.length === 0)
+      throw createError("Carrinho vazio.", 400);
 
     for (const item of cart.items) {
       if (!item.product.isActive) {
-        throw createError(`Produto "${item.product.name}" não está mais disponível.`, 409);
+        throw createError(
+          `Produto "${item.product.name}" não está mais disponível.`,
+          409,
+        );
       }
       if (item.product.stock < item.quantity) {
-        throw createError(`Estoque insuficiente para "${item.product.name}".`, 409);
+        throw createError(
+          `Estoque insuficiente para "${item.product.name}".`,
+          409,
+        );
       }
     }
 
     const total = cart.items.reduce(
       (sum, item) => sum.add(item.product.price.mul(item.quantity)),
-      new Prisma.Decimal(0)
+      new Prisma.Decimal(0),
     );
 
     const order = await prisma.$transaction(async (tx) => {
@@ -102,22 +112,38 @@ class OrderService {
       prisma.orders.count({ where }),
     ]);
 
-    return { data, meta: { total, page: safePage, limit: take, totalPages: Math.ceil(total / take) } };
+    return {
+      data,
+      meta: {
+        total,
+        page: safePage,
+        limit: take,
+        totalPages: Math.ceil(total / take),
+      },
+    };
   }
 
-  async getOrderById(id: string, userId: string, isAdmin: boolean): Promise<OrderResponse> {
+  async getOrderById(
+    id: string,
+    userId: string,
+    isAdmin: boolean,
+  ): Promise<OrderResponse> {
     const order = await prisma.orders.findUnique({
       where: { id },
       include: orderInclude,
     });
 
     if (!order) throw createError("Pedido não encontrado.", 404);
-    if (!isAdmin && order.userId !== userId) throw createError("Acesso negado.", 403);
+    if (!isAdmin && order.userId !== userId)
+      throw createError("Acesso negado.", 403);
 
     return order;
   }
 
-  async updateOrderStatus(id: string, orderStatus: OrderStatus): Promise<OrderResponse> {
+  async updateOrderStatus(
+    id: string,
+    orderStatus: OrderStatus,
+  ): Promise<OrderResponse> {
     const order = await prisma.orders.findUnique({ where: { id } });
 
     if (!order) throw createError("Pedido não encontrado.", 404);
@@ -129,15 +155,21 @@ class OrderService {
     });
   }
 
-  async cancelOrder(id: string, userId: string, isAdmin: boolean): Promise<OrderResponse> {
+  async cancelOrder(
+    id: string,
+    userId: string,
+    isAdmin: boolean,
+  ): Promise<OrderResponse> {
     const order = await prisma.orders.findUnique({
       where: { id },
       include: { items: true },
     });
 
     if (!order) throw createError("Pedido não encontrado.", 404);
-    if (!isAdmin && order.userId !== userId) throw createError("Acesso negado.", 403);
-    if (order.orderStatus !== "PENDING") throw createError("Apenas pedidos PENDING podem ser cancelados.", 409);
+    if (!isAdmin && order.userId !== userId)
+      throw createError("Acesso negado.", 403);
+    if (order.orderStatus !== "PENDING")
+      throw createError("Apenas pedidos PENDING podem ser cancelados.", 409);
 
     return await prisma.$transaction(async (tx) => {
       for (const item of order.items) {

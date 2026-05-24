@@ -1,6 +1,6 @@
 import express from "express";
-import { authAdminOnly, authToken } from "../middlewares/authMiddlewares";
 import userControllers from "../controllers/userControllers";
+import { authAdminOnly, authToken } from "../middlewares/authMiddlewares";
 
 const routes = express.Router();
 
@@ -38,7 +38,12 @@ const routes = express.Router();
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.get("/", authToken, authAdminOnly, userControllers.getUsers.bind(userControllers));
+routes.get(
+  "/",
+  authToken,
+  authAdminOnly,
+  userControllers.getUsers.bind(userControllers),
+);
 
 /**
  * @swagger
@@ -106,7 +111,12 @@ routes.get("/", authToken, authAdminOnly, userControllers.getUsers.bind(userCont
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.post("/", authToken, authAdminOnly, userControllers.createUser.bind(userControllers));
+routes.post(
+  "/",
+  authToken,
+  authAdminOnly,
+  userControllers.createUser.bind(userControllers),
+);
 
 /**
  * @swagger
@@ -157,7 +167,11 @@ routes.post("/", authToken, authAdminOnly, userControllers.createUser.bind(userC
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.patch("/update/me", authToken, userControllers.updateUser.bind(userControllers));
+routes.patch(
+  "/update/me",
+  authToken,
+  userControllers.updateUser.bind(userControllers),
+);
 
 /**
  * @swagger
@@ -205,7 +219,11 @@ routes.patch("/update/me", authToken, userControllers.updateUser.bind(userContro
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.patch("/update/password", authToken, userControllers.updateUserPassword.bind(userControllers));
+routes.patch(
+  "/update/password",
+  authToken,
+  userControllers.updateUserPassword.bind(userControllers),
+);
 
 /**
  * @swagger
@@ -266,7 +284,12 @@ routes.patch("/update/password", authToken, userControllers.updateUserPassword.b
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.patch("/update/:id/role", authToken, authAdminOnly, userControllers.updateUserRole.bind(userControllers));
+routes.patch(
+  "/update/:id/role",
+  authToken,
+  authAdminOnly,
+  userControllers.updateUserRole.bind(userControllers),
+);
 
 /**
  * @swagger
@@ -331,6 +354,11 @@ routes.patch("/update/:id/role", authToken, authAdminOnly, userControllers.updat
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.patch("/toggle/:id", authToken, authAdminOnly, userControllers.toggle.bind(userControllers));
+routes.patch(
+  "/toggle/:id",
+  authToken,
+  authAdminOnly,
+  userControllers.toggle.bind(userControllers),
+);
 
 export default routes;

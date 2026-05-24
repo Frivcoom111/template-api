@@ -1,16 +1,23 @@
 import type { NextFunction, Request, Response } from "express";
-import productsServices from "../services/productsServices";
-import { productSchema, updateProductSchema } from "../validators/productsValidators";
-import { idParamsSchema } from "../validators/globalValidators";
 import type {
   CreateProductDTO,
   ProductListResponse,
   ProductResponse,
   UpdateProductDTO,
 } from "../interfaces/product.interface";
+import productsServices from "../services/productsServices";
+import { idParamsSchema } from "../validators/globalValidators";
+import {
+  productSchema,
+  updateProductSchema,
+} from "../validators/productsValidators";
 
 class ProductsControllers {
-  async createProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async createProduct(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const validation = productSchema.safeParse(req.body);
 
@@ -29,7 +36,11 @@ class ProductsControllers {
     }
   }
 
-  async updateProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateProduct(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -49,15 +60,24 @@ class ProductsControllers {
 
       const data: UpdateProductDTO = validation.data;
 
-      const product: ProductResponse = await productsServices.update(validationId.data.id, data);
+      const product: ProductResponse = await productsServices.update(
+        validationId.data.id,
+        data,
+      );
 
-      res.status(200).json({ message: "Produto atualizado com sucesso.", product });
+      res
+        .status(200)
+        .json({ message: "Produto atualizado com sucesso.", product });
     } catch (error) {
       next(error);
     }
   }
 
-  async deleteProduct(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async deleteProduct(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -83,13 +103,19 @@ class ProductsControllers {
     }
   }
 
-  async getProducts(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getProducts(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { category, search } = req.query;
       const parsedPage = Number.parseInt(req.query.page as string, 10);
       const parsedLimit = Number.parseInt(req.query.limit as string, 10);
-      const page = Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
-      const limit = Number.isInteger(parsedLimit) && parsedLimit > 0 ? parsedLimit : 20;
+      const page =
+        Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+      const limit =
+        Number.isInteger(parsedLimit) && parsedLimit > 0 ? parsedLimit : 20;
 
       const result: ProductListResponse = await productsServices.getAll({
         categorySlug: category as string | undefined,
@@ -104,7 +130,11 @@ class ProductsControllers {
     }
   }
 
-  async getProductById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getProductById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -115,7 +145,9 @@ class ProductsControllers {
         return;
       }
 
-      const product: ProductResponse = await productsServices.getById(validation.data.id);
+      const product: ProductResponse = await productsServices.getById(
+        validation.data.id,
+      );
 
       res.status(200).json({ product });
     } catch (error) {

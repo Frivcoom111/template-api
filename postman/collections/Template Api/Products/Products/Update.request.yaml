@@ -1,0 +1,24 @@
+$kind: http-request
+name: Update
+order: 5000
+url: '{{baseURL}}/products/update/e157478b-3002-4834-b12e-f94347c71dc1'
+method: PATCH
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "categoryId": "70fdf939-315b-4288-853f-5f3426e77486",
+      "name": "Guitarra Eletrica",
+      "mark": "Tagima",
+      "description": "Guitarra Eletrica Tagima T-635 Classic - Sunburst",
+      "price": 1500,
+      "stock": 5
+    }

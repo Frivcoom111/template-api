@@ -1,7 +1,7 @@
 import express from "express";
 import authControllers from "../controllers/authControllers";
-import { authToken } from "../middlewares/authMiddlewares";
 import emailControllers from "../controllers/emailControllers";
+import { authToken } from "../middlewares/authMiddlewares";
 
 const routes = express.Router();
 
@@ -204,7 +204,11 @@ routes.get("/me", authToken, authControllers.getUser.bind(authControllers));
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-routes.post("/send-email", authToken, emailControllers.sendEmail.bind(emailControllers));
+routes.post(
+  "/send-email",
+  authToken,
+  emailControllers.sendEmail.bind(emailControllers),
+);
 
 /**
  * @swagger
@@ -258,6 +262,10 @@ routes.post("/send-email", authToken, emailControllers.sendEmail.bind(emailContr
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-routes.post("/verified-email", authToken, emailControllers.verifyEmail.bind(emailControllers));
+routes.post(
+  "/verified-email",
+  authToken,
+  emailControllers.verifyEmail.bind(emailControllers),
+);
 
 export default routes;

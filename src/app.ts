@@ -1,20 +1,23 @@
-import express from "express";
 import cors from "cors";
-import helmet from "helmet";
+import express from "express";
 import { rateLimit } from "express-rate-limit";
+import helmet from "helmet";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { swaggerOptions } from "./config/swagger";
 import { errorMiddleware } from "./middlewares/errorMiddlewares";
-import { getRequiredEnv } from "./utils/getRequiredEnv";
+import addressRoutes from "./routes/addressRoutes";
 
 import authRoutes from "./routes/authRoutes";
-import userRoutes from "./routes/userRoutes";
-import categoriesRoutes from "./routes/categoriesRoutes";
-import productsRoutes from "./routes/productsRoutes";
 import cartRoutes from "./routes/cartRoutes";
-import addressRoutes from "./routes/addressRoutes";
+import categoriesRoutes from "./routes/categoriesRoutes";
 import orderRoutes from "./routes/orderRoutes";
+<<<<<<< Updated upstream
+=======
+import productsRoutes from "./routes/productsRoutes";
+import userRoutes from "./routes/userRoutes";
+import { getRequiredEnv } from "./utils/getRequiredEnv";
+>>>>>>> Stashed changes
 
 const app = express();
 
@@ -23,7 +26,7 @@ app.use(
   cors({
     origin: getRequiredEnv("FRONTEND_URL"),
     methods: ["GET", "POST", "PATCH", "DELETE"],
-  })
+  }),
 );
 
 // Segurança: cabeçalhos HTTP protegidos
@@ -43,11 +46,11 @@ const authLimiter = rateLimit({
 });
 
 app.use(defaultLimiter);
-app.use("/auth", authLimiter)
+app.use("/auth", authLimiter);
 
 app.use(express.json({ limit: "10kb" })); // Limite de arquivos que podem ser enviados na request.
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   const swaggerSpec = swaggerJsdoc(swaggerOptions);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }

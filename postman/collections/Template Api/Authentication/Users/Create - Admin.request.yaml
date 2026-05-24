@@ -1,0 +1,22 @@
+$kind: http-request
+name: Create - Admin
+order: 1000
+url: '{{baseURL}}/users'
+method: POST
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "name": "Carlos Eduardo Tolentino",
+      "email": "carlos.eduardo3.tolentino@gmail.com",
+      "password": "12345678",
+      "role": "ADMIN"
+    }

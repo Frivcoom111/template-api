@@ -1,0 +1,10 @@
+$kind: http-request
+name: Listar Endereços pelo Id
+order: 3000
+url: '{{baseURL}}/addresses/8fdeaeef-f277-4711-b766-3f5a3bf87806'
+method: GET
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'

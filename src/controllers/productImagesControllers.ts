@@ -1,14 +1,18 @@
 import type { NextFunction, Request, Response } from "express";
-import productImagesServices from "../services/productImagesServices";
-import { productImageSchema } from "../validators/productImagesValidators";
-import { idParamsSchema } from "../validators/globalValidators";
 import type {
   AddProductImageDTO,
   ProductImageResponse,
 } from "../interfaces/product.interface";
+import productImagesServices from "../services/productImagesServices";
+import { idParamsSchema } from "../validators/globalValidators";
+import { productImageSchema } from "../validators/productImagesValidators";
 
 class ProductImagesControllers {
-  async getImages(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getImages(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { productId } = req.params;
 
@@ -18,7 +22,9 @@ class ProductImagesControllers {
         return;
       }
 
-      const images = await productImagesServices.getByProduct(validation.data.id);
+      const images = await productImagesServices.getByProduct(
+        validation.data.id,
+      );
 
       res.status(200).json(images);
     } catch (error) {
@@ -26,7 +32,11 @@ class ProductImagesControllers {
     }
   }
 
-  async addImage(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async addImage(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { productId } = req.params;
 
@@ -44,15 +54,24 @@ class ProductImagesControllers {
 
       const data: AddProductImageDTO = validation.data;
 
-      const image: ProductImageResponse = await productImagesServices.add(validationId.data.id, data.url);
+      const image: ProductImageResponse = await productImagesServices.add(
+        validationId.data.id,
+        data.url,
+      );
 
-      res.status(201).json({ message: "Imagem adicionada com sucesso.", image });
+      res
+        .status(201)
+        .json({ message: "Imagem adicionada com sucesso.", image });
     } catch (error) {
       next(error);
     }
   }
 
-  async removeImage(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async removeImage(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { productId, imageId } = req.params;
 

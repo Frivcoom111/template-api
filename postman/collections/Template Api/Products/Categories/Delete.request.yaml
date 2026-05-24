@@ -1,0 +1,10 @@
+$kind: http-request
+name: Delete
+order: 4000
+url: '{{baseURL}}/categories/1'
+method: DELETE
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'

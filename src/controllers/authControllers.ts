@@ -1,12 +1,20 @@
 import type { NextFunction, Request, Response } from "express";
+import type { JwtPayload } from "jsonwebtoken";
+import type {
+  LoginDTO,
+  LoginResponse,
+  RegisterDTO,
+} from "../interfaces/auth.interface";
+import type { UserResponse } from "../interfaces/user.interface";
 import authService from "../services/authServices";
 import { loginSchema, registerSchema } from "../validators/authValidators";
-import type { LoginDTO, LoginResponse, RegisterDTO } from "../interfaces/auth.interface";
-import type { UserResponse } from "../interfaces/user.interface";
-import type { JwtPayload } from "jsonwebtoken";
 
 class AuthController {
-  async register(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async register(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const validation = registerSchema.safeParse(req.body);
 
@@ -19,7 +27,9 @@ class AuthController {
 
       const userCreated: UserResponse = await authService.register(data);
 
-      res.status(201).json({ message: "Usuário criado com sucesso.", userCreated });
+      res
+        .status(201)
+        .json({ message: "Usuário criado com sucesso.", userCreated });
     } catch (error) {
       next(error);
     }
@@ -38,7 +48,9 @@ class AuthController {
 
       const { token, user }: LoginResponse = await authService.login(data);
 
-      res.status(200).json({ message: "Login feito com sucesso.", token, user });
+      res
+        .status(200)
+        .json({ message: "Login feito com sucesso.", token, user });
     } catch (error) {
       next(error);
     }
@@ -63,7 +75,11 @@ class AuthController {
     }
   }
 
-  async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
 

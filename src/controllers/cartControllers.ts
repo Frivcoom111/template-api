@@ -1,15 +1,22 @@
 import type { NextFunction, Request, Response } from "express";
-import cartServices from "../services/cartServices";
-import { addCartItemSchema, updateCartItemSchema } from "../validators/cartValidators";
-import { idParamsSchema } from "../validators/globalValidators";
 import type {
   AddToCartDTO,
   CartResponse,
   UpdateCartItemDTO,
 } from "../interfaces/cart.interface";
+import cartServices from "../services/cartServices";
+import {
+  addCartItemSchema,
+  updateCartItemSchema,
+} from "../validators/cartValidators";
+import { idParamsSchema } from "../validators/globalValidators";
 
 class CartControllers {
-  async getCart(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getCart(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");
@@ -22,7 +29,11 @@ class CartControllers {
     }
   }
 
-  async addItem(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async addItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");
@@ -36,7 +47,11 @@ class CartControllers {
 
       const data: AddToCartDTO = validation.data;
 
-      const cart: CartResponse = await cartServices.addItem(id, data.productId, data.quantity);
+      const cart: CartResponse = await cartServices.addItem(
+        id,
+        data.productId,
+        data.quantity,
+      );
 
       res.status(200).json({ message: "Item adicionado ao carrinho.", cart });
     } catch (error) {
@@ -44,12 +59,18 @@ class CartControllers {
     }
   }
 
-  async updateItem(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");
 
-      const validationId = idParamsSchema.safeParse({ id: req.params.productId });
+      const validationId = idParamsSchema.safeParse({
+        id: req.params.productId,
+      });
       const validation = updateCartItemSchema.safeParse(req.body);
 
       if (!validationId.success) {
@@ -64,7 +85,11 @@ class CartControllers {
 
       const data: UpdateCartItemDTO = validation.data;
 
-      const cart: CartResponse = await cartServices.updateItem(id, validationId.data.id, data.quantity);
+      const cart: CartResponse = await cartServices.updateItem(
+        id,
+        validationId.data.id,
+        data.quantity,
+      );
 
       res.status(200).json({ message: "Quantidade atualizada.", cart });
     } catch (error) {
@@ -72,7 +97,11 @@ class CartControllers {
     }
   }
 
-  async removeItem(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async removeItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");
@@ -84,7 +113,10 @@ class CartControllers {
         return;
       }
 
-      const cart: CartResponse = await cartServices.removeItem(id, validation.data.id);
+      const cart: CartResponse = await cartServices.removeItem(
+        id,
+        validation.data.id,
+      );
 
       res.status(200).json({ message: "Item removido do carrinho.", cart });
     } catch (error) {
@@ -92,7 +124,11 @@ class CartControllers {
     }
   }
 
-  async clearCart(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async clearCart(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");

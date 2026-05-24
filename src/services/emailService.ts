@@ -1,10 +1,10 @@
 import transporter from "../lib/mailer";
-import { getRequiredEnv } from "../utils/getRequiredEnv";
 import prisma from "../lib/prisma";
 import redis from "../lib/redis";
+import { compareHash } from "../utils/compareHash";
 import { createError } from "../utils/createError";
 import { generateHash } from "../utils/generateHash";
-import { compareHash } from "../utils/compareHash";
+import { getRequiredEnv } from "../utils/getRequiredEnv";
 
 class EmailService {
   async sendEmail(id: string): Promise<void> {
@@ -70,13 +70,17 @@ class EmailService {
 
     const savedCode = await redis.get(key);
 
-    if (!savedCode) throw createError("Código expirado ou não solicitado.", 400);
+    if (!savedCode)
+      throw createError("Código expirado ou não solicitado.", 400);
 
     const isMatch: boolean = await compareHash(code, savedCode);
 
     if (!isMatch) throw createError("Código digitado inválido.", 400);
 
-    await prisma.user.update({ where: { id: id }, data: { verifiedEmail: true } });
+    await prisma.user.update({
+      where: { id: id },
+      data: { verifiedEmail: true },
+    });
 
     await redis.del(key);
   }

@@ -1,15 +1,23 @@
+import type { Prisma } from "../generated/prisma/client";
+import type {
+  LoginDTO,
+  LoginResponse,
+  RegisterDTO,
+} from "../interfaces/auth.interface";
+import type { UserResponse } from "../interfaces/user.interface";
 import prisma from "../lib/prisma";
+import redis from "../lib/redis";
 import { compareHash } from "../utils/compareHash";
+import { createError } from "../utils/createError";
 import { generateHash } from "../utils/generateHash";
 import { generateToken } from "../utils/generateToken";
-import { createError } from "../utils/createError";
-import type { Prisma } from "../generated/prisma/client";
-import type { LoginDTO, LoginResponse, RegisterDTO } from "../interfaces/auth.interface";
-import type { UserResponse } from "../interfaces/user.interface";
-import redis from "../lib/redis";
 
 class AuthService {
-  async register({ name, email, password }: RegisterDTO): Promise<UserResponse> {
+  async register({
+    name,
+    email,
+    password,
+  }: RegisterDTO): Promise<UserResponse> {
     try {
       const normalizedEmail = email.toLowerCase().trim();
       const hashPassword = await generateHash(password);

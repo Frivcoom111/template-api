@@ -1,0 +1,15 @@
+$kind: http-request
+name: Listar
+order: 2000
+url: '{{baseURL}}/orders?page=1&limit=20'
+method: GET
+queryParams:
+  - key: page
+    value: '1'
+  - key: limit
+    value: '20'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{userToken}}'

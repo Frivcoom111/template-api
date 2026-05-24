@@ -1,0 +1,10 @@
+$kind: http-request
+name: Listar Produtos pelo Slug e Search
+order: 4000
+url: '{{baseURL}}/products?search=&category='
+method: GET
+queryParams:
+  - key: search
+    value: ''
+  - key: category
+    value: ''

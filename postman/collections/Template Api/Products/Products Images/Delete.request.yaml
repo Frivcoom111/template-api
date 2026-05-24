@@ -1,0 +1,10 @@
+$kind: http-request
+name: Delete
+order: 3000
+url: '{{baseURL}}/products/ee0c3a04-0e05-4a83-8bd2-4ffd93f5c6fc/images/83c0f926-8c1e-422e-b07c-236a223f9887'
+method: DELETE
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'

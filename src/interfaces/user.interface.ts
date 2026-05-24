@@ -32,7 +32,7 @@ export interface UserResponse {
   email: string;
   role: Role;
   isActive: boolean;
-  verifiedEmail?: boolean
+  verifiedEmail?: boolean;
 }
 
 export interface UserListResponse {

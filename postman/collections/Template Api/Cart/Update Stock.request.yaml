@@ -1,0 +1,19 @@
+$kind: http-request
+name: Update Stock
+order: 3000
+url: '{{baseURL}}/cart/ee0c3a04-0e05-4a83-8bd2-4ffd93f5c6fc'
+method: PATCH
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{userToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "quantity": 2
+    }

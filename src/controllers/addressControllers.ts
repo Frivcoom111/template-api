@@ -1,20 +1,28 @@
 import type { NextFunction, Request, Response } from "express";
-import addressServices from "../services/addressServices";
-import { createAddressSchema, updateAddressSchema } from "../validators/addressValidators";
-import { idParamsSchema } from "../validators/globalValidators";
 import type {
   AddressResponse,
   CreateAddressDTO,
   UpdateAddressDTO,
 } from "../interfaces/address.interface";
+import addressServices from "../services/addressServices";
+import {
+  createAddressSchema,
+  updateAddressSchema,
+} from "../validators/addressValidators";
+import { idParamsSchema } from "../validators/globalValidators";
 
 class AddressControllers {
-  async getAddresses(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAddresses(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");
 
-      const addresses: AddressResponse[] = await addressServices.getAddresses(id);
+      const addresses: AddressResponse[] =
+        await addressServices.getAddresses(id);
 
       res.status(200).json({ addresses });
     } catch (error) {
@@ -22,7 +30,11 @@ class AddressControllers {
     }
   }
 
-  async getAddressById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAddressById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const userId = req.user?.id;
       const role = req.user?.role;
@@ -35,7 +47,11 @@ class AddressControllers {
         return;
       }
 
-      const address: AddressResponse = await addressServices.getAddressById(validation.data.id, userId, role);
+      const address: AddressResponse = await addressServices.getAddressById(
+        validation.data.id,
+        userId,
+        role,
+      );
 
       res.status(200).json({ address });
     } catch (error) {
@@ -43,7 +59,11 @@ class AddressControllers {
     }
   }
 
-  async createAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async createAddress(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");
@@ -57,15 +77,24 @@ class AddressControllers {
 
       const data: CreateAddressDTO = validation.data;
 
-      const address: AddressResponse = await addressServices.createAddress(id, data);
+      const address: AddressResponse = await addressServices.createAddress(
+        id,
+        data,
+      );
 
-      res.status(201).json({ message: "Endereço criado com sucesso.", address });
+      res
+        .status(201)
+        .json({ message: "Endereço criado com sucesso.", address });
     } catch (error) {
       next(error);
     }
   }
 
-  async updateAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateAddress(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");
@@ -85,15 +114,25 @@ class AddressControllers {
 
       const data: UpdateAddressDTO = validation.data;
 
-      const address: AddressResponse = await addressServices.updateAddress(validationId.data.id, id, data);
+      const address: AddressResponse = await addressServices.updateAddress(
+        validationId.data.id,
+        id,
+        data,
+      );
 
-      res.status(200).json({ message: "Endereço atualizado com sucesso.", address });
+      res
+        .status(200)
+        .json({ message: "Endereço atualizado com sucesso.", address });
     } catch (error) {
       next(error);
     }
   }
 
-  async deleteAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async deleteAddress(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.user?.id;
       if (!id) throw new Error("ID usuário inválido.");
@@ -105,7 +144,10 @@ class AddressControllers {
         return;
       }
 
-      const result = await addressServices.deleteAddress(validation.data.id, id);
+      const result = await addressServices.deleteAddress(
+        validation.data.id,
+        id,
+      );
 
       res.status(200).json({
         message: result.softDeleted

@@ -1,6 +1,6 @@
 import express from "express";
-import { authToken } from "../middlewares/authMiddlewares";
 import addressControllers from "../controllers/addressControllers";
+import { authToken } from "../middlewares/authMiddlewares";
 
 const routes = express.Router();
 
@@ -31,7 +31,11 @@ const routes = express.Router();
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.get("/", authToken, addressControllers.getAddresses.bind(addressControllers));
+routes.get(
+  "/",
+  authToken,
+  addressControllers.getAddresses.bind(addressControllers),
+);
 
 /**
  * @swagger
@@ -74,7 +78,11 @@ routes.get("/", authToken, addressControllers.getAddresses.bind(addressControlle
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.get("/:id", authToken, addressControllers.getAddressById.bind(addressControllers));
+routes.get(
+  "/:id",
+  authToken,
+  addressControllers.getAddressById.bind(addressControllers),
+);
 
 /**
  * @swagger
@@ -138,7 +146,11 @@ routes.get("/:id", authToken, addressControllers.getAddressById.bind(addressCont
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.post("/", authToken, addressControllers.createAddress.bind(addressControllers));
+routes.post(
+  "/",
+  authToken,
+  addressControllers.createAddress.bind(addressControllers),
+);
 
 /**
  * @swagger
@@ -200,7 +212,11 @@ routes.post("/", authToken, addressControllers.createAddress.bind(addressControl
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.patch("/:id", authToken, addressControllers.updateAddress.bind(addressControllers));
+routes.patch(
+  "/:id",
+  authToken,
+  addressControllers.updateAddress.bind(addressControllers),
+);
 
 /**
  * @swagger
@@ -245,6 +261,10 @@ routes.patch("/:id", authToken, addressControllers.updateAddress.bind(addressCon
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.delete("/:id", authToken, addressControllers.deleteAddress.bind(addressControllers));
+routes.delete(
+  "/:id",
+  authToken,
+  addressControllers.deleteAddress.bind(addressControllers),
+);
 
 export default routes;

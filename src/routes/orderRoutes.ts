@@ -1,6 +1,6 @@
 import express from "express";
 import orderControllers from "../controllers/orderControllers";
-import { authToken, authAdminOnly } from "../middlewares/authMiddlewares";
+import { authAdminOnly, authToken } from "../middlewares/authMiddlewares";
 
 const routes = express.Router();
 
@@ -65,7 +65,11 @@ const routes = express.Router();
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.post("/", authToken, orderControllers.createOrder.bind(orderControllers));
+routes.post(
+  "/",
+  authToken,
+  orderControllers.createOrder.bind(orderControllers),
+);
 
 /**
  * @swagger
@@ -139,7 +143,11 @@ routes.get("/", authToken, orderControllers.getOrders.bind(orderControllers));
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.get("/:id", authToken, orderControllers.getOrderById.bind(orderControllers));
+routes.get(
+  "/:id",
+  authToken,
+  orderControllers.getOrderById.bind(orderControllers),
+);
 
 /**
  * @swagger
@@ -200,7 +208,12 @@ routes.get("/:id", authToken, orderControllers.getOrderById.bind(orderController
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.patch("/:id/status", authToken, authAdminOnly, orderControllers.updateOrderStatus.bind(orderControllers));
+routes.patch(
+  "/:id/status",
+  authToken,
+  authAdminOnly,
+  orderControllers.updateOrderStatus.bind(orderControllers),
+);
 
 /**
  * @swagger
@@ -253,6 +266,10 @@ routes.patch("/:id/status", authToken, authAdminOnly, orderControllers.updateOrd
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.delete("/:id", authToken, orderControllers.cancelOrder.bind(orderControllers));
+routes.delete(
+  "/:id",
+  authToken,
+  orderControllers.cancelOrder.bind(orderControllers),
+);
 
 export default routes;

@@ -1,0 +1,24 @@
+$kind: http-request
+name: Create
+order: 1000
+url: '{{baseURL}}/addresses'
+method: POST
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{userToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "street": "Rua das Flores",
+      "number": 142,
+      "complement": "Apto 31",
+      "city": "São Paulo",
+      "state": "SP",
+      "zipCode": "01310-100"
+    }

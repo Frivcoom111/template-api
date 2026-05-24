@@ -1,0 +1,25 @@
+$kind: http-request
+name: Create
+order: 2000
+url: '{{baseURL}}/products'
+method: POST
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "categoryId": "70fdf939-315b-4288-853f-5f3426e77486",
+      "name": "Guitarra Eletrica Tagima",
+      "mark": "Tagima",
+      "description": "Guitarra Eletrica Tagima T-635 Classic - Sunburst",
+      "price": 1500,
+      "stock": 10,
+      "imageUrl": "https://imagens.com/guitarra1.jpg"
+    }

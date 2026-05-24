@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll } from "vitest";
 import jwt from "jsonwebtoken";
+import { beforeAll, describe, expect, it } from "vitest";
 
 let generateToken: (user: { id: string }) => string;
 
@@ -21,10 +21,17 @@ describe("generateToken", () => {
   });
 
   it("o token contém o id do usuário", () => {
-    const user = { id: "550e8400-e29b-41d4-a716-446655440000", role: "USER", isActive: true };
+    const user = {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      role: "USER",
+      isActive: true,
+    };
     const token = generateToken(user);
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwt.JwtPayload;
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET!,
+    ) as jwt.JwtPayload;
     expect(decoded.id).toBe("550e8400-e29b-41d4-a716-446655440000");
   });
 });

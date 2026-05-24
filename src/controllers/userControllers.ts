@@ -1,12 +1,4 @@
 import type { NextFunction, Request, Response } from "express";
-import userService from "../services/userServices";
-import { idParamsSchema } from "../validators/globalValidators";
-import {
-  userCreateSchema,
-  userUpdatePasswordSchema,
-  userUpdateRoleSchema,
-  userUpdateSchema,
-} from "../validators/userValidators";
 import type {
   CreateUserDTO,
   ToggleUserDTO,
@@ -16,9 +8,21 @@ import type {
   UserListResponse,
   UserResponse,
 } from "../interfaces/user.interface";
+import userService from "../services/userServices";
+import { idParamsSchema } from "../validators/globalValidators";
+import {
+  userCreateSchema,
+  userUpdatePasswordSchema,
+  userUpdateRoleSchema,
+  userUpdateSchema,
+} from "../validators/userValidators";
 
 class UserController {
-  async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async createUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const validation = userCreateSchema.safeParse(req.body);
 
@@ -31,28 +35,45 @@ class UserController {
 
       const userCreated: UserResponse = await userService.create(data);
 
-      res.status(201).json({ message: "Usuário criado com sucesso.", userCreated });
+      res
+        .status(201)
+        .json({ message: "Usuário criado com sucesso.", userCreated });
     } catch (error) {
       next(error);
     }
   }
 
-  async getUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getUsers(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const rawPage = req.query.page;
       const rawLimit = req.query.limit;
 
-      const page = rawPage === undefined ? 1 : Number.parseInt(rawPage as string, 10);
-      const limit = rawLimit === undefined ? 20 : Number.parseInt(rawLimit as string, 10);
+      const page =
+        rawPage === undefined ? 1 : Number.parseInt(rawPage as string, 10);
+      const limit =
+        rawLimit === undefined ? 20 : Number.parseInt(rawLimit as string, 10);
 
-      if (!Number.isInteger(page) || !Number.isInteger(limit) || page < 1 || limit < 1 || limit > 100) {
+      if (
+        !Number.isInteger(page) ||
+        !Number.isInteger(limit) ||
+        page < 1 ||
+        limit < 1 ||
+        limit > 100
+      ) {
         res.status(400).json({
           error:
             "Parâmetros de paginação inválidos. 'page' deve ser >= 1 e 'limit' deve estar entre 1 e 100.",
         });
         return;
       }
-      const result: UserListResponse = await userService.getAll({ page, limit });
+      const result: UserListResponse = await userService.getAll({
+        page,
+        limit,
+      });
 
       res.status(200).json(result);
     } catch (error) {
@@ -60,7 +81,11 @@ class UserController {
     }
   }
 
-  async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const validation = userUpdateSchema.safeParse(req.body);
       const id = req.user?.id;
@@ -79,13 +104,19 @@ class UserController {
 
       const updatedUser: UserResponse = await userService.update(id, data);
 
-      res.status(200).json({ message: "Usuário atualizado com sucesso.", updatedUser });
+      res
+        .status(200)
+        .json({ message: "Usuário atualizado com sucesso.", updatedUser });
     } catch (error) {
       next(error);
     }
   }
 
-  async updateUserPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateUserPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const validation = userUpdatePasswordSchema.safeParse(req.body);
       const id = req.user?.id;
@@ -99,15 +130,24 @@ class UserController {
 
       const data: UpdateUserPasswordDTO = validation.data;
 
-      const updatedUser: UserResponse = await userService.updatePassword({ id, ...data });
+      const updatedUser: UserResponse = await userService.updatePassword({
+        id,
+        ...data,
+      });
 
-      res.status(200).json({ message: "Senha atualizada com sucesso.", updatedUser });
+      res
+        .status(200)
+        .json({ message: "Senha atualizada com sucesso.", updatedUser });
     } catch (error) {
       next(error);
     }
   }
 
-  async updateUserRole(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateUserRole(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -130,7 +170,9 @@ class UserController {
         role: data.role,
       });
 
-      res.status(200).json({ message: "Papel atualizado com sucesso.", updatedUser });
+      res
+        .status(200)
+        .json({ message: "Papel atualizado com sucesso.", updatedUser });
     } catch (error) {
       next(error);
     }
@@ -154,14 +196,15 @@ class UserController {
         return;
       }
 
-      const userToggle: UserResponse = await userService.toggle({ id: validation.data.id, isActive });
+      const userToggle: UserResponse = await userService.toggle({
+        id: validation.data.id,
+        isActive,
+      });
 
-      res
-        .status(200)
-        .json({
-          message: `Usuário ${userToggle.isActive ? "ativado" : "desativado"} com sucesso.`,
-          userToggle,
-        });
+      res.status(200).json({
+        message: `Usuário ${userToggle.isActive ? "ativado" : "desativado"} com sucesso.`,
+        userToggle,
+      });
     } catch (error) {
       next(error);
     }

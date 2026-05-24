@@ -1,0 +1,8 @@
+$kind: http-request
+name: Listar Categorias pelo Slug
+order: 5000
+url: '{{baseURL}}/categories?slug=guitarra-eletrica'
+method: GET
+queryParams:
+  - key: slug
+    value: guitarra-eletrica

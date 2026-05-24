@@ -1,0 +1,19 @@
+$kind: http-request
+name: Create
+order: 2000
+url: '{{baseURL}}/products/ee0c3a04-0e05-4a83-8bd2-4ffd93f5c6fc/images'
+method: POST
+headers:
+  - key: Content-Type
+    value: application/json
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{adminToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "url": "https://imagens.com/guitarra2.jpg"
+    }

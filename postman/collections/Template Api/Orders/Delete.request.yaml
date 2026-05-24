@@ -1,0 +1,10 @@
+$kind: http-request
+name: Delete
+order: 5000
+url: '{{baseURL}}/orders/da4a7fac-526e-4a9f-b100-1c3aa9fe75ad'
+method: DELETE
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{userToken}}'

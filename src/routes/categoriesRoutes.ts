@@ -1,6 +1,6 @@
 import express from "express";
-import { authToken, authAdminOnly } from "../middlewares/authMiddlewares";
 import categoriesControllers from "../controllers/categoriesControllers";
+import { authAdminOnly, authToken } from "../middlewares/authMiddlewares";
 
 const routes = express.Router();
 
@@ -35,7 +35,10 @@ const routes = express.Router();
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.get("/", categoriesControllers.getCategories.bind(categoriesControllers));
+routes.get(
+  "/",
+  categoriesControllers.getCategories.bind(categoriesControllers),
+);
 
 /**
  * @swagger
@@ -91,7 +94,12 @@ routes.get("/", categoriesControllers.getCategories.bind(categoriesControllers))
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.post("/", authToken, authAdminOnly, categoriesControllers.createCategory.bind(categoriesControllers));
+routes.post(
+  "/",
+  authToken,
+  authAdminOnly,
+  categoriesControllers.createCategory.bind(categoriesControllers),
+);
 
 /**
  * @swagger
@@ -156,7 +164,12 @@ routes.post("/", authToken, authAdminOnly, categoriesControllers.createCategory.
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.patch("/update/:id", authToken, authAdminOnly, categoriesControllers.updatedCategory.bind(categoriesControllers));
+routes.patch(
+  "/update/:id",
+  authToken,
+  authAdminOnly,
+  categoriesControllers.updatedCategory.bind(categoriesControllers),
+);
 
 /**
  * @swagger
@@ -205,6 +218,11 @@ routes.patch("/update/:id", authToken, authAdminOnly, categoriesControllers.upda
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Error' }
  */
-routes.delete("/:id", authToken, authAdminOnly, categoriesControllers.deleteCategory.bind(categoriesControllers));
+routes.delete(
+  "/:id",
+  authToken,
+  authAdminOnly,
+  categoriesControllers.deleteCategory.bind(categoriesControllers),
+);
 
 export default routes;
